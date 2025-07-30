@@ -38,7 +38,7 @@
             fetch-priority="high"
             quality="90"
             preload
-            placeholder
+            :placeholder="[800, 400]"
             fit="cover"
           />
         </div>
@@ -124,11 +124,10 @@
             width="800"
             height="400"
             format="webp"
-            loading="eager"
-            fetch-priority="high"
-            quality="90"
-            preload
-            placeholder
+            loading="lazy"
+            fetch-priority="low"
+            quality="85"
+            :placeholder="[800, 400]"
             fit="cover"
           />
         </div>
