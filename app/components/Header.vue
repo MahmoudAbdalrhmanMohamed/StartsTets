@@ -38,11 +38,6 @@
       </nav>
 
       <div class="flex items-center gap-4">
-        <!-- <button
-          class="w-10 h-10 p-2 grid place-items-center place-content-center rounded-full bg-gray-100 text-gray-800"
-        >
-          <Icon name="mdi:magnify" size="20" />
-        </button> -->
         <SearchModal />
       </div>
     </div>

@@ -27,4 +27,9 @@ export default defineNuxtConfig({
       ],
     },
   },
+
+  routeRules: {
+    "/": { prerender: true },
+    "/article/**": { isr: 3600 },
+  },
 });
