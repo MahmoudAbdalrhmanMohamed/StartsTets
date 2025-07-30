@@ -12,10 +12,10 @@
             loading="eager"
             fetch-priority="high"
             quality="90"
-            class="h-10 w-auto"
             preload
             placeholder
             fit="cover"
+            class="h-10 w-auto"
           />
         </NuxtLink>
       </div>

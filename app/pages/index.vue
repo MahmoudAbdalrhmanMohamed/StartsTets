@@ -27,10 +27,19 @@
           </div>
         </div>
         <div class="md:w-1/2">
-          <img
+          <NuxtImg
             src="/images/hero.jpg"
             alt="أثاث منزلي"
             class="rounded-lg shadow-xl"
+            width="800"
+            height="400"
+            format="webp"
+            loading="eager"
+            fetch-priority="high"
+            quality="90"
+            preload
+            placeholder
+            fit="cover"
           />
         </div>
       </div>
@@ -115,9 +124,12 @@
             width="800"
             height="400"
             format="webp"
-            loading="lazy"
-            fetch-priority="low"
+            loading="eager"
+            fetch-priority="high"
             quality="90"
+            preload
+            placeholder
+            fit="cover"
           />
         </div>
       </div>
@@ -218,6 +230,19 @@
 </template>
 
 <script setup>
+// useHead({
+//   link: [
+//     {
+//       rel: "preload",
+//       href: "/images/hero.jpg",
+//       as: "image",
+//       fetchpriority: "high",
+//       type: "image/jpeg",
+//       tagPriority: "critical",
+//     },
+//   ],
+// });
+
 // Fake data for the home page
 const categories = ref([
   { id: 1, name: "غرف نوم", icon: "mdi:bed-king", count: 45 },
