@@ -40,6 +40,9 @@
             preload
             :placeholder="[800, 400]"
             fit="cover"
+            densities="1x"
+            decoding="async"
+            fetchpriority="high"
           />
         </div>
       </div>
@@ -129,6 +132,7 @@
             quality="85"
             :placeholder="[800, 400]"
             fit="cover"
+            densities="1x"
           />
         </div>
       </div>
