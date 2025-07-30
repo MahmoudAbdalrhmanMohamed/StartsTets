@@ -1,12 +1,18 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div>
     <Header />
-    <main class="flex-grow">
-      <NuxtPage />
-    </main>
+    <NuxtPage />
     <Footer />
   </div>
 </template>
+
+<script setup>
+useHead({
+  htmlAttrs: {
+    class: ["overflow-x-hidden"],
+  },
+});
+</script>
 
 <style>
 body {
