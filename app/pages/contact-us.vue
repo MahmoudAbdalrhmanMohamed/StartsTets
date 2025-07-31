@@ -1,5 +1,13 @@
 <template>
   <div>
+    <!-- Toast Component -->
+    <Toast
+      ref="toast"
+      :message="toastMessage"
+      :type="toastType"
+      :position="'top-right'"
+    />
+
     <!-- Hero -->
     <section class="relative py-20 bg-gray-100">
       <div class="container mx-auto px-4 text-center">
@@ -23,28 +31,37 @@
               <h2 class="text-2xl font-bold text-gray-800 mb-6">
                 أرسل لنا رسالة
               </h2>
-
-              <form class="space-y-4">
+              <form @submit.prevent="handleSubmit" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label for="name" class="block text-gray-700 mb-2"
                       >الاسم</label
                     >
                     <input
+                      v-model="form.name"
                       type="text"
                       id="name"
                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                      :class="{ 'border-red-500': errors.name }"
                     />
+                    <p v-if="errors.name" class="text-red-500 text-sm mt-1">
+                      {{ errors.name }}
+                    </p>
                   </div>
                   <div>
                     <label for="email" class="block text-gray-700 mb-2"
                       >البريد الإلكتروني</label
                     >
                     <input
+                      v-model="form.email"
                       type="email"
                       id="email"
                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                      :class="{ 'border-red-500': errors.email }"
                     />
+                    <p v-if="errors.email" class="text-red-500 text-sm mt-1">
+                      {{ errors.email }}
+                    </p>
                   </div>
                 </div>
 
@@ -53,10 +70,15 @@
                     >رقم الهاتف</label
                   >
                   <input
+                    v-model="form.phone"
                     type="tel"
                     id="phone"
                     class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    :class="{ 'border-red-500': errors.phone }"
                   />
+                  <p v-if="errors.phone" class="text-red-500 text-sm mt-1">
+                    {{ errors.phone }}
+                  </p>
                 </div>
 
                 <div>
@@ -64,10 +86,15 @@
                     >الموضوع</label
                   >
                   <input
+                    v-model="form.subject"
                     type="text"
                     id="subject"
                     class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    :class="{ 'border-red-500': errors.subject }"
                   />
+                  <p v-if="errors.subject" class="text-red-500 text-sm mt-1">
+                    {{ errors.subject }}
+                  </p>
                 </div>
 
                 <div>
@@ -75,17 +102,24 @@
                     >الرسالة</label
                   >
                   <textarea
+                    v-model="form.message"
                     id="message"
                     rows="5"
                     class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    :class="{ 'border-red-500': errors.message }"
                   ></textarea>
+                  <p v-if="errors.message" class="text-red-500 text-sm mt-1">
+                    {{ errors.message }}
+                  </p>
                 </div>
 
                 <button
                   type="submit"
-                  class="w-full bg-primary text-white py-3 rounded-md hover:bg-primary-dark"
+                  class="w-full bg-[#101828] text-white py-3 rounded-md hover:bg-[#101828]/80 cursor-pointer transition-all duration-300"
+                  :disabled="isSubmitting"
                 >
-                  إرسال الرسالة
+                  <span v-if="!isSubmitting">إرسال الرسالة</span>
+                  <span v-else>جاري الإرسال...</span>
                 </button>
               </form>
             </div>
@@ -211,4 +245,89 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+// console.log(formSchema);
+
+// Toast ref
+const toast = ref(null);
+
+// Form state
+const form = reactive({
+  name: "",
+  email: "",
+  phone: "",
+  subject: "",
+  message: "",
+});
+
+// Form errors
+const errors = reactive({
+  name: "",
+  email: "",
+  phone: "",
+  subject: "",
+  message: "",
+});
+
+// Form submission state
+const isSubmitting = ref(false);
+
+// Toast state
+const toastMessage = ref("");
+const toastType = ref("info");
+
+// Handle form submission
+const handleSubmit = async () => {
+  try {
+    // Validate form
+    const result = formSchema.safeParse(form);
+
+    if (!result.success) {
+      // Clear previous errors
+
+      Object.keys(errors).forEach((key) => (errors[key] = ""));
+
+      // Set new errors
+      result.error.issues.forEach((err) => {
+        errors[err.path[0]] = err.message;
+      });
+
+      showToast(
+        "يوجد أخطاء في النموذج، يرجى التصحيح والمحاولة مرة أخرى",
+        "error"
+      );
+      return;
+    }
+
+    isSubmitting.value = true;
+
+    // Here you would typically send the form data to your backend
+    // For example:
+    // const response = await $fetch('/api/contact', {
+    //   method: 'POST',
+    //   body: form
+    // });
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // Reset form
+    Object.keys(form).forEach((key) => (form[key] = ""));
+    Object.keys(errors).forEach((key) => (errors[key] = ""));
+
+    showToast("تم إرسال رسالتك بنجاح، سنتواصل معك قريباً", "success");
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    showToast("حدث خطأ أثناء إرسال الرسالة، يرجى المحاولة مرة أخرى", "error");
+  } finally {
+    isSubmitting.value = false;
+  }
+};
+
+// Show toast message
+const showToast = (message, type = "info") => {
+  toastMessage.value = message;
+  toastType.value = type;
+  toast.value.show();
+};
+</script>
